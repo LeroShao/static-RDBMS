@@ -36,7 +36,7 @@ public class QueryParser {
         joins = ps.getJoins();
         orderByElements = ps.getOrderByElements();
         Catlog.getCatlog();
-        Catlog.resetDirs("interpreter/samples/input", "interpreter/samples/output");
+        Catlog.resetDirs("/Users/lirongshao/Desktop/Interpreter/staticRDBMS/interpreter/samples/input", "/Users/lirongshao/Desktop/Interpreter/staticRDBMS/interpreter/samples/output");
 
         Catlog.aliases.clear();
         /*

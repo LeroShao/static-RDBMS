@@ -1,3 +1,5 @@
+package client;
+
 import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.statement.Statement;
 import util.Catlog;
@@ -6,7 +8,7 @@ import util.TreeBuilder;
 import java.io.FileReader;
 import java.io.PrintStream;
 
-public class Test {
+public class StaticRDBMS {
 	public static void main(String[] args) {
         Catlog.getCatlog();
         PrintStream printStream = System.out;

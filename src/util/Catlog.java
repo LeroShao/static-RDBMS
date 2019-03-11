@@ -21,8 +21,8 @@ import java.util.List;
 public class Catlog {
 	private static Catlog catlog;
 
-	public static String inputDir = "interpreter/samples" + File.separator + "input";
-	public static String outputDir = "interpreter/samples" + File.separator + "output";
+	public static String inputDir = "/Users/lirongshao/Desktop/Interpreter/staticRDBMS/interpreter/samples" + File.separator + "input";
+	public static String outputDir = "/Users/lirongshao/Desktop/Interpreter/staticRDBMS/interpreter/samples" + File.separator + "output";
 	public static String qryPath;
 	public static String dbDir;
 	public static String dataDir;
