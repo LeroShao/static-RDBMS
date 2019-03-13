@@ -27,7 +27,6 @@ public class Table {
 				
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -39,10 +38,9 @@ public class Table {
 			try {
 				br.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		br = Catlog.getTableReader(name);
+		br = Catalog.getTableReader(name);
 	}
 }

@@ -2,7 +2,7 @@ package client;
 
 import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.statement.Statement;
-import util.Catlog;
+import util.Catalog;
 import util.TreeBuilder;
 
 import java.io.FileReader;
@@ -10,11 +10,11 @@ import java.io.PrintStream;
 
 public class StaticRDBMS {
 	public static void main(String[] args) {
-        Catlog.getCatlog();
+        Catalog.getCatalog();
         PrintStream printStream = System.out;
 
         try {
-            CCJSqlParser parser = new CCJSqlParser(new FileReader(Catlog.qryPath));
+            CCJSqlParser parser = new CCJSqlParser(new FileReader(Catalog.qryPath));
             Statement statement;
             while ((statement = parser.Statement()) != null) {
                 TreeBuilder tb = new TreeBuilder(statement);

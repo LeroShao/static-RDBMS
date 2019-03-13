@@ -1,7 +1,7 @@
 package util;
 
 import net.sf.jsqlparser.statement.Statement;
-import operators.*;
+import operators.physical.*;
 
 import java.util.ArrayList;
 
@@ -24,16 +24,16 @@ public class TreeBuilder {
             Operator newOp = new ScanOperator(qp.getTable(i));
             if(qp.getSelectCond(i) != null)
                 newOp = new SelectOperator((ScanOperator) newOp, qp.getSelectCond(i));
-            curNode = new JoinOperator(curNode, newOp, qp.getJoinCond(i));
+            curNode = new TNLJ(curNode, newOp, qp.getJoinCond(i));
         }
 
         if(qp.selectItems != null)
             curNode = new ProjectOperator(curNode, qp.selectItems);
         if(qp.orderByElements != null)
-            curNode = new SortOperator(curNode, qp.orderByElements);
+            curNode = new InMemSortOperator(curNode, qp.orderByElements);
         if(qp.distinct != null) {
             if(qp.orderByElements == null)
-                curNode = new SortOperator(curNode, new ArrayList<>());
+                curNode = new InMemSortOperator(curNode, new ArrayList<>());
 
             curNode = new DuplicateEliminationOperator(curNode);
         }

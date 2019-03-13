@@ -35,16 +35,16 @@ public class QueryParser {
         distinct = ps.getDistinct();
         joins = ps.getJoins();
         orderByElements = ps.getOrderByElements();
-        Catlog.getCatlog();
-        Catlog.resetDirs("/Users/lirongshao/Desktop/Interpreter/staticRDBMS/interpreter/samples/input", "/Users/lirongshao/Desktop/Interpreter/staticRDBMS/interpreter/samples/output");
+        Catalog.getCatalog();
+        Catalog.resetDirs("/Users/lirongshao/Desktop/Interpreter/staticRDBMS/samples/input", "/Users/lirongshao/Desktop/Interpreter/staticRDBMS/samples/output");
 
-        Catlog.aliases.clear();
+        Catalog.aliases.clear();
         /*
         * froms stores table aliases/table names
         * */
         froms = new ArrayList<>();
         if(fromItem.getAlias() != null) {
-            Catlog.aliases.put(fromItem.getAlias(), Helper.getOrigName(fromItem));
+            Catalog.aliases.put(fromItem.getAlias(), Helper.getOrigName(fromItem));
             froms.add(fromItem.getAlias());
         }
         else
@@ -54,7 +54,7 @@ public class QueryParser {
             for(Join join : joins) {
                 FromItem ri = join.getRightItem();
                 if(ri.getAlias() != null) {
-                    Catlog.aliases.put(ri.getAlias(), Helper.getOrigName(ri));
+                    Catalog.aliases.put(ri.getAlias(), Helper.getOrigName(ri));
                     froms.add(ri.getAlias());
                 }
                 else
@@ -117,6 +117,6 @@ public class QueryParser {
     }
 
     public Table getTable(int idx) {
-        return Catlog.getTable(froms.get(idx));
+        return Catalog.getTable(froms.get(idx));
     }
 }
