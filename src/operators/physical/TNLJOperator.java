@@ -9,13 +9,13 @@ import java.util.ArrayList;
 /**
  * Created by s on 2/23/19
  **/
-public class TNLJ extends JoinOperator{
+public class TNLJOperator extends JoinOperator{
     public JoinExpVisitor joinExpVisitor;
     public Tuple curLeft;
     public Tuple curRight;
     public Expression expression;
 
-    public TNLJ(Operator left, Operator right, Expression expression) {
+    public TNLJOperator(Operator left, Operator right, Expression expression) {
         super(left, right, expression);
         joinExpVisitor = new JoinExpVisitor(left.schema(), right.schema());
         curLeft = left.getNextTuple();

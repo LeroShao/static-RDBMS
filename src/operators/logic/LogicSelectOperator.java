@@ -12,6 +12,7 @@ public class LogicSelectOperator extends LogicUnaryOperator {
     public LogicSelectOperator(LogicOperator child, Expression expression) {
         super(child);
         this.child = child;
+        this.expression = expression;
     }
 
     @Override

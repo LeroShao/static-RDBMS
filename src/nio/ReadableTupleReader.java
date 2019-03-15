@@ -10,7 +10,7 @@ import java.io.*;
  *
  * main purpose of the class is debugging utilities
  *
- * NormalTupleReader uses Java's standard I/O,
+ * ReadableTupleReader uses Java's standard I/O,
  * NIO is not used,
  * operations on pages are not supported
  *
@@ -20,16 +20,16 @@ import java.io.*;
  *
  * Created by s on 3/11/19
  **/
-public class NormalTupleReader implements TupleReader {
+public class ReadableTupleReader implements TupleReader {
     private File file;
     private BufferedReader br;
 
-    public NormalTupleReader(File file) throws FileNotFoundException {
+    public ReadableTupleReader(File file) throws FileNotFoundException {
         this.file = file;
         this.br = new BufferedReader(new FileReader(this.file));
     }
 
-    public NormalTupleReader(String fileName) throws FileNotFoundException {
+    public ReadableTupleReader(String fileName) throws FileNotFoundException {
         this(new File(fileName));
     }
 

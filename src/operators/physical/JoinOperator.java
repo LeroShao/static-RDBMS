@@ -33,7 +33,7 @@ public abstract class JoinOperator extends BinaryOperator {
         return null;
     }
 
-    public abstract void next();
+    protected abstract void next();
 
     public Tuple joinTp(Tuple tuple1, Tuple tuple2) {
         int[] cols = new int[tuple1.length() + tuple2.length()];

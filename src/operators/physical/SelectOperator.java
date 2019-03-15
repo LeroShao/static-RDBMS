@@ -22,9 +22,7 @@ public class SelectOperator extends UnaryOperator {
     public Tuple getNextTuple() {
         Tuple tp;
         while ((tp = child.getNextTuple()) != null) {
-            if (exp == null)
-                return tp;
-            if (Helper.getSelRes(tp, exp, sv))
+            if (exp == null || Helper.getSelRes(tp, exp, sv))
                 return tp;
                 /*  public static boolean getSelRes(Tuple tp, Expression exp, SelExpVisitor selExpVisitor) {
                         selExpVisitor.setTuple(tp);

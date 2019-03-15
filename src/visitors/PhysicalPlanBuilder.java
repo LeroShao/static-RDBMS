@@ -1,7 +1,13 @@
 package visitors;
 
+import net.sf.jsqlparser.expression.Expression;
 import operators.logic.*;
 import operators.physical.*;
+import util.Catalog;
+import util.Helper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by s on 3/10/19
@@ -48,8 +54,14 @@ public class PhysicalPlanBuilder {
 
     public void visit(LogicSortOperator lop) {
         getChild(lop);
-        // TODO determine which sort method to use
-
+        switch (Catalog.sortMethod) {
+            case INMEMSORT:
+                pop = new InMemSortOperator(pop, lop.orders);
+                break;
+            case EXTERNALSORT:
+                pop = new ExternalSortOperator(pop, lop.orders);
+                break;
+        }
     }
 
     public void visit(LogicDuplicateEliminationOperator lop) {
@@ -59,6 +71,36 @@ public class PhysicalPlanBuilder {
 
     public void visit(LogicJoinOperator lop) {
         Operator[] LR = getLR(lop);
-        // TODO determine which join method to use
+        switch (Catalog.joinMethod) {
+            case SMJ:
+                List<Integer> outerIdxs = new ArrayList<>();
+                List<Integer> innerIdxs = new ArrayList<>();
+                Expression processedExp = Helper.processJoin(lop.expression, LR[0].schema(), LR[1].schema(),
+                        outerIdxs, innerIdxs);
+
+                if(!outerIdxs.isEmpty()) {
+                    lop.expression = processedExp;
+                    if(Catalog.sortMethod == Catalog.SortMethod.INMEMSORT) {
+                        LR[0] = new InMemSortOperator(LR[0], outerIdxs);
+                        LR[1] = new InMemSortOperator(LR[1], innerIdxs);
+                    }
+                    else {
+                        LR[0] = new ExternalSortOperator(LR[0], outerIdxs);
+                        LR[1] = new ExternalSortOperator(LR[1], innerIdxs);
+                    }
+                    pop = new SMJOperator(LR[0], LR[1], lop.expression, outerIdxs, innerIdxs);
+                }
+                else {
+                    // not equijoin
+                    pop = new BNLJOperator(LR[0], LR[1], lop.expression);
+                }
+                break;
+            case BNLJ:
+                pop = new BNLJOperator(LR[0], LR[1], lop.expression);
+                break;
+            case TNLJ:
+                pop = new TNLJOperator(LR[0], LR[1], lop.expression);
+                break;
+        }
     }
 }

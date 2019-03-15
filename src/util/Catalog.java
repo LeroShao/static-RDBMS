@@ -21,8 +21,12 @@ import java.util.List;
 public class Catalog {
 	private static Catalog catalog;
 
+	public static final int ATTRSIZE = 4;
+	public static final int PAGESIZE = 4096;
+
 	public static String inputDir = "/Users/lirongshao/Desktop/Interpreter/staticRDBMS/samples" + File.separator + "input";
 	public static String outputDir = "/Users/lirongshao/Desktop/Interpreter/staticRDBMS/samples" + File.separator + "output";
+	public static String tmpDir = "/Users/lirongshao/Desktop/Interpreter/staticRDBMS/samples" +File.separator;
 	public static String qryPath;
 	public static String dbDir;
 	public static String dataDir;
@@ -30,7 +34,21 @@ public class Catalog {
 	
 	public static HashMap<String, List<String>> schemas = new HashMap<>();
 	public static HashMap<String, String> aliases = new HashMap<>();
-	
+
+	public enum JoinMethod {
+		TNLJ, BNLJ, SMJ;
+	}
+
+	public static JoinMethod joinMethod = JoinMethod.SMJ;
+	public static Integer joinBuffPgs = null;
+
+	public enum SortMethod {
+		INMEMSORT, EXTERNALSORT;
+	}
+
+	public static SortMethod sortMethod = SortMethod.INMEMSORT;
+	public static Integer sortBuffPgs = null;
+
 	/** 
 	 * intentionally make the constructor private, which 
 	 * avoids instances being created outside the class

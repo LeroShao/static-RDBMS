@@ -1,7 +1,9 @@
 package util;
 
 import net.sf.jsqlparser.statement.Statement;
-import operators.physical.*;
+import operators.logic.*;
+import operators.physical.Operator;
+import visitors.PhysicalPlanBuilder;
 
 import java.util.ArrayList;
 
@@ -16,28 +18,31 @@ public class TreeBuilder {
     public TreeBuilder(Statement stmt) {
         qp = new QueryParser(stmt);
 
-        Operator curNode = new ScanOperator(qp.getTable(0));
-        if(qp.getSelectCond(0) != null)
-            curNode = new SelectOperator((ScanOperator) curNode, qp.getSelectCond(0));
-
+        LogicOperator curNode = new LogicScanOperator(qp.getTable(0));
+        if(qp.getSelectCond(0) != null) {
+            curNode = new LogicSelectOperator(curNode, qp.getSelectCond(0));
+        }
         for (int i = 1; i < qp.froms.size(); i++) {
-            Operator newOp = new ScanOperator(qp.getTable(i));
-            if(qp.getSelectCond(i) != null)
-                newOp = new SelectOperator((ScanOperator) newOp, qp.getSelectCond(i));
-            curNode = new TNLJ(curNode, newOp, qp.getJoinCond(i));
+            LogicOperator newOp = new LogicScanOperator(qp.getTable(i));
+            if(qp.getSelectCond(i) != null) {
+                newOp = new LogicSelectOperator(newOp, qp.getSelectCond(i));
+            }
+            curNode = new LogicJoinOperator(curNode, newOp, qp.getJoinCond(i));
         }
 
         if(qp.selectItems != null)
-            curNode = new ProjectOperator(curNode, qp.selectItems);
+            curNode = new LogicProjectOperator(curNode, qp.selectItems);
         if(qp.orderByElements != null)
-            curNode = new InMemSortOperator(curNode, qp.orderByElements);
+            curNode = new LogicSortOperator(curNode, qp.orderByElements);
         if(qp.distinct != null) {
             if(qp.orderByElements == null)
-                curNode = new InMemSortOperator(curNode, new ArrayList<>());
+                curNode = new LogicSortOperator(curNode, new ArrayList<>());
 
-            curNode = new DuplicateEliminationOperator(curNode);
+            curNode = new LogicDuplicateEliminationOperator(curNode);
         }
 
-        root = curNode;
+        PhysicalPlanBuilder ppb = new PhysicalPlanBuilder();
+        curNode.accept(ppb);
+        root = ppb.getPhysicalOperator();
     }
 }

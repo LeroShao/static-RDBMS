@@ -1,9 +1,12 @@
 package util;
 
+import nio.TupleReader;
+
 public class Tuple {
 
-	public int[] cols = null;
-	
+	public int[] cols;
+	public TupleReader tpReader = null;
+
 	public Tuple(int[] cols) {
 		this.cols = cols;
 	}

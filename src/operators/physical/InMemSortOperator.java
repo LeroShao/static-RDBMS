@@ -1,6 +1,5 @@
 package operators.physical;
 
-import net.sf.jsqlparser.statement.select.OrderByElement;
 import util.Tuple;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ public class InMemSortOperator extends SortOperator {
     List<Tuple> tuples;
     private long curIdx;
 
-    public InMemSortOperator(Operator child, List<OrderByElement> orders) {
+    public InMemSortOperator(Operator child, List<?> orders) {
         super(child, orders);
         tuples = new ArrayList<>();
 

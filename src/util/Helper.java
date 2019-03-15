@@ -3,6 +3,7 @@ package util;
 import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
+import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.FromItem;
 import visitors.JoinExpVisitor;
@@ -116,24 +117,51 @@ public class Helper {
         return res;
     }
 
-    /*
-    * check if ordered elements are not selected
-    * but in this project, we assume all ordered elements are selected
-    * */
-//    public static boolean projLoss(List<SelectItem> selects, List<OrderByElement> orders) {
-//        if(selects.get(0) instanceof AllColumns)
-//            return false;
-//        if(orders == null || orders.isEmpty())
-//            return false;
-//
-//        HashSet<String> sels = new HashSet<>();
-//        HashSet<String> ods = new HashSet<>();
-//        for(SelectItem sel : selects)
-//            sels.add(sel.toString());
-//        for(OrderByElement od : orders)
-//            ods.add(od.toString());
-//
-//        ods.removeAll(sels);
-//        return !ods.isEmpty();
-//    }
+    public static Expression processJoin(Expression expression,
+                                         List<String> outerSchema, List<String> innerSchema,
+                                         List<Integer> outerIndexes, List<Integer> innerIndexes) {
+        outerIndexes.clear();
+        innerIndexes.clear();
+        if(expression == null) return null;
+
+        List<Expression> expressions = decomposeAnds(expression);
+        List<Expression> equals = new ArrayList<>();
+        List<Expression> tmp = new ArrayList<>();
+
+        for (Expression exp : expressions) {
+            if(!(exp instanceof EqualsTo)) {
+                tmp.add(exp);
+                continue;
+            }
+
+            EqualsTo e = (EqualsTo) expression;
+            String leftCol = e.getLeftExpression().toString();
+            String rightCol = e.getRightExpression().toString();
+
+            boolean outerHasL = outerSchema.contains(leftCol),
+                    outerHasR = outerSchema.contains(rightCol),
+                    innerHasL = innerSchema.contains(leftCol),
+                    innerHasR = innerSchema.contains(rightCol);
+
+            if(!(outerHasR && innerHasL || outerHasL && innerHasR)) {
+                tmp.add(e);
+                continue;
+            }
+
+            if(outerHasR) {
+                e = new EqualsTo(e.getRightExpression(), e.getLeftExpression());
+                String temp = leftCol;
+                leftCol = rightCol;
+                rightCol = temp;
+            }
+
+            int outerIdx = getAttrIdx(leftCol, outerSchema);
+            int innerIdx = getAttrIdx(rightCol, innerSchema);
+            outerIndexes.add(outerIdx);
+            innerIndexes.add(innerIdx);
+            equals.add(e);
+        }
+        equals.addAll(tmp);
+        return genAnds(equals);
+    }
 }

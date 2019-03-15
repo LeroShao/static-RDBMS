@@ -7,16 +7,16 @@ import java.io.*;
 /**
  * Created by s on 3/11/19
  **/
-public class NormalTupleWriter implements TupleWriter {
+public class ReadableTupleWriter implements TupleWriter {
     private File file;
     private BufferedWriter bw;
 
-    public NormalTupleWriter(File file) throws IOException {
+    public ReadableTupleWriter(File file) throws IOException {
         this.file = file;
         bw = new BufferedWriter(new FileWriter(this.file));
     }
 
-    public NormalTupleWriter(String fileName) throws IOException {
+    public ReadableTupleWriter(String fileName) throws IOException {
         this(new File(fileName));
     }
 

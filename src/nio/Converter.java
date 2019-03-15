@@ -11,7 +11,7 @@ public class Converter {
 
     public static void binaryToNormal(String inputPath, String outputPath) throws IOException {
         TupleReader reader = new BinaryTupleReader(inputPath);
-        TupleWriter writer = new NormalTupleWriter(outputPath);
+        TupleWriter writer = new ReadableTupleWriter(outputPath);
         Tuple tuple = null;
 
         while ((tuple = reader.read()) != null)
@@ -22,7 +22,7 @@ public class Converter {
     }
 
     public static void normalToBinary(String inputPath, String outputPath) throws IOException {
-        TupleReader reader = new NormalTupleReader(inputPath);
+        TupleReader reader = new ReadableTupleReader(inputPath);
         TupleWriter writer = new BinaryTupleWriter(outputPath);
         Tuple tuple = null;
 
